@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   
-  <title>数据中台 | 大胖熊</title>
+  <title>行列转换 | 大胖熊</title>
 
   
     <link rel="apple-touch-icon" href="/images/favicon.png">
@@ -95,7 +95,7 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">数据中台</div>
+      <div class="post-title">行列转换</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="更新时间 | updatetime"></i>
@@ -106,8 +106,8 @@
                 <i class="iconfont icon-bookmark" title="类别 | categories"></i>
                 
                 <span class="span--category">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" title="查看 数据中台 分类">
-                    <b>#</b> 数据中台
+                  <a href="/categories/SQL/" title="查看 SQL 分类">
+                    <b>#</b> SQL
                   </a>
                 </span>
                 
@@ -117,8 +117,8 @@
                 <i class="iconfont icon-tags" title="标签 | tags"></i>
                 
                 <span class="span--tag">
-                  <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" title="查看 数据中台 标签">
-                    <b>#</b> 数据中台
+                  <a href="/tags/SQL/" title="查看 SQL 标签">
+                    <b>#</b> SQL
                   </a>
                 </span>
                 
@@ -126,7 +126,41 @@
           
       </div>
       <div class="markdown-body">
-        <h3 id="数据中台"><a href="#数据中台" class="headerlink" title="数据中台"></a>数据中台</h3><p>数据中台</p>
+        <h5 id="列转行：collect-set-collect-list"><a href="#列转行：collect-set-collect-list" class="headerlink" title="列转行：collect_set(),collect_list()"></a>列转行：collect_set(),collect_list()</h5><p>两者常与group by一起使用，将分组中的某列转为一个数组返；<br>不同的是collect_list不去重，collect_set去重<br>示例Table：<br>| colA | colB |<br>| — | — |<br>| 1 | A |<br>| 1 | B |<br>| 1 | A |<br>| 2 | C |<br>| 3 | A |<br>| 3 | D |</p>
+<ul>
+<li>collect_set() 去重<blockquote>
+<p>select colA,<br>collect_set(colB) as set B<br>from Table<br>group by colA </p>
+</blockquote>
+</li>
+</ul>
+<p>Result：<br>| colA | setB |<br>| — | — |<br>| 1 | [‘A’,’B’] |<br>| 2 | [‘C’] |<br>| 3 | [‘A’,’D’] |</p>
+<ul>
+<li>collect_list() 不去重<blockquote>
+<p>select colA,<br>collect_list(colB) as listB<br>form Table<br>group by colA </p>
+</blockquote>
+</li>
+</ul>
+<p>Result：<br>| colA | listB |<br>| — | — |<br>| 1 | [‘A’,’B’,’A’] |<br>| 2 | [‘C’] |<br>| 3 | [‘A’,’D’] |</p>
+<h5 id="行转列：explode-array"><a href="#行转列：explode-array" class="headerlink" title="行转列：explode(array)"></a>行转列：explode(array)</h5><p>数组中的每个元素生成一行；<br>select中无法产生其他列<br>示例T1：<br>| colA | colB |<br>| — | — |<br>| 1 | [‘A’,’B’,’A’] |<br>| 2 | [‘C’] |<br>| 3 | [‘A’,’D’] |<br>示例T2：<br>| colA | colB |<br>| — | — |<br>| 1 | A,B,A|<br>| 2 | C |<br>| 3 | A,D |</p>
+<blockquote>
+<p>select explode(colB) as colB<br>from T1;<br>select explode(split(colB,’,’)) as colB<br>from T2;</p>
+</blockquote>
+<p>Result：<br>| colB |<br>| — |<br>| A |<br>| B |<br>| A |<br>| C |<br>| A |<br>| D |</p>
+<h5 id="行转列：lateral-view（常与explode一起使用）"><a href="#行转列：lateral-view（常与explode一起使用）" class="headerlink" title="行转列：lateral view（常与explode一起使用）"></a>行转列：lateral view（常与explode一起使用）</h5><p>示例T1：<br>| colA | colB |<br>| — | — |<br>| 1 | [‘A’,’B’,’A’] |<br>| 2 | [‘C’] |<br>| 3 | [‘A’,’D’] |</p>
+<blockquote>
+<p>select colA,tmpB<br>from T1<br>lateral view explode(colB) tmp as tmpB </p>
+</blockquote>
+<p>Result：<br>| colA | tmp B |<br>| 1 | A |<br>| 1 | B |<br>| 1 | A |<br>| 2 | C |<br>| 3 | A |<br>| 3 | D |</p>
+<p>示例T2：<br>| colA | colB |<br>| — | — |<br>| [1,4] | A,B,A|<br>| [2,5,6] | C |<br>| [3] | A,D |</p>
+<blockquote>
+<p>select tmpA,tmpB<br>from T2<br>lateral view explode(colA) tmp1 as tmpA<br>lateral view explode(colB) tmp2 as tmpB</p>
+</blockquote>
+<p>Result：<br>| tmpA | tmpB |<br>| — | — |<br>| 1 | A |<br>| 1 | B |<br>| 1 | A |<br>| 4 | A |<br>| 4 | B |<br>| 4 | A |<br>| 2 | C |<br>| 5 | C |<br>| 6 | C |<br>| 3 | A |<br>| 3 | D |</p>
+<p>综合示例Table：<br>| os | uv |<br>| — | — |<br>| 1 | 123 |<br>| 2 | 345 |<br>| 3 | 5 |<br>| 4 | 9 |<br>| 5 | 10 | </p>
+<blockquote>
+<p>– 统计各操作系统以及总的登录用户数<br>select<br>  os_type,<br>  count(distinct uid) as login_uv<br>from<br>  Table lateral view explode(<br>    case<br>      when os = ‘1’ then array(‘ios’, ‘all’)<br>      when os = ‘2’ then array(‘android’, ‘all’)<br>      else array(‘other’, ‘all’)<br>    end<br>  ) t as os_type<br>group by<br>  os_type<br>order BY<br>  login_uv desc</p>
+</blockquote>
+<p>Result：<br>| os_type | login_uv |<br>| — | — |<br>| all | 492 |<br>| android | 345 |<br>| ios | 123 |<br>| other | 24 |</p>
 
       </div>
       
@@ -149,8 +183,8 @@
                     <i class="iconfont icon-bookmark" title="类别 | categories"></i>
                     
                     <span class="span--category">
-                      <a href="/categories/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" title="查看 数据中台 分类">
-                        <b>#</b> 数据中台
+                      <a href="/categories/SQL/" title="查看 SQL 分类">
+                        <b>#</b> SQL
                       </a>
                     </span>
                     
@@ -160,8 +194,8 @@
                     <i class="iconfont icon-tags" title="标签 | tags"></i>
                     
                     <span class="span--tag">
-                      <a href="/tags/%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0/" title="查看 数据中台 标签">
-                        <b>#</b> 数据中台
+                      <a href="/tags/SQL/" title="查看 SQL 标签">
+                        <b>#</b> SQL
                       </a>
                     </span>
                     
@@ -169,6 +203,11 @@
               
           </div>
           <div class="post-foot-prev">
+            
+              <a href="/2020/08/22/two/" target="_self">
+                <span>NEXT</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
             
           </div>
         </div>
@@ -178,7 +217,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8F%B0"><span class="toc-text">数据中台</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%BD%AC%E8%A1%8C%EF%BC%9Acollect-set-collect-list"><span class="toc-text">列转行：collect_set(),collect_list()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Aexplode-array"><span class="toc-text">行转列：explode(array)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Alateral-view%EF%BC%88%E5%B8%B8%E4%B8%8Eexplode%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="toc-text">行转列：lateral view（常与explode一起使用）</span></a></li></ol>
     </div>
   </div>
 
