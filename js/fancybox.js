@@ -11,7 +11,7 @@ let fancyTimer = setInterval(function(){
       // $(this).attr("data-fancybox", "gallery"); // if you add 'data-fancybox', img will display after showed
       var element = document.createElement("a");
       $(element).attr("data-fancybox", "gallery");
-      $(element).attr("href", $(this).attr("src") + "index.html");
+      $(element).attr("href", $(this).attr("src"));
       $(this).wrap(element);
     });
 
