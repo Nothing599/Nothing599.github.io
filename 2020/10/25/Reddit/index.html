@@ -155,7 +155,10 @@
 <p>注：根据controversy函数可以看出针对高赞成高反对高争议的帖子会有争议值的计算，例如有1000赞成1000反对的帖子相比较只有2赞0反对的帖子来说排名会靠前</p>
 <h3 id="计算公式"><a href="#计算公式" class="headerlink" title="计算公式"></a>计算公式</h3><p>结合以上几个变量，Reddit的最终得分计算公式如下：</p>
 <p>$$Score = \log_{10}z+\frac {yt} {45000}$$</p>
-<h3 id="公式拆解"><a href="#公式拆解" class="headerlink" title="公式拆解"></a>公式拆解</h3><p><strong>（一）</strong></p>
+<p>$$\sqrt{2} \quad and \quad \sqrt[n]{3}$$</p>
+<p>$ J_\alpha(x) = \sum_{m=0}^\infty \frac{(-1)^m}{m! \Gamma (m + \alpha + 1)} {\left({ \frac{x}{2} }\right)}^{2m + \alpha} \text {，行内公式示例} $</p>
+<p><strong>公式拆解</strong></p>
+<p><strong>（一）</strong></p>
 <p>$$ \log_{10}z $$</p>
 <p>该部分表示赞成票与反对票的差额z越大，得分越大</p>
 <p>注意点：<br>这里用的是以10为底的对数，意味着z = 10的时候可以得1分，z = 100的时候可以得2分。也就是说前10个投票人与后90个人（甚至再后面900个投票人）的权重是一样的，即如果一个帖子特别受到欢迎，那么越到后面投赞成票，对得分越不会产生影响<br>当赞成票 = 反对票时，z = 1，因此这部分为0即不产生得分<br><strong>（二）</strong></p>
@@ -230,7 +233,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8C%87%E6%A0%87"><span class="toc-text">算法指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%E6%8B%86%E8%A7%A3"><span class="toc-text">公式拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8C%87%E6%A0%87"><span class="toc-text">算法指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
     </div>
   </div>
 
