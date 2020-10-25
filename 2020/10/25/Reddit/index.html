@@ -146,17 +146,17 @@
 <p>在网上有看到贴github上除计算hot值外还有计算争议值：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cpdef double controversy(long ups,long downs):</span><br><span class="line">    <span class="keyword">return</span> float(ups + downs) / max(abs(score(ups,downs)),<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
-<h3 id="算法指标"><a href="#算法指标" class="headerlink" title="算法指标"></a>算法指标</h3><p><strong>1. 帖子的新旧程度t</strong><br>t = 发帖时间 - 2005年12月8日7:46:43<br>t的单位为秒，用unix时间戳计算。一旦帖子发表，t就是固定值，不会随时间改变，而且帖子越新，t值越大<br>2005年12月8日应该是Reddit成立的时间</p>
+<h3 id="数据指标"><a href="#数据指标" class="headerlink" title="数据指标"></a>数据指标</h3><p><strong>1. 帖子的新旧程度t</strong><br>t = 发帖时间 - 2005年12月8日7:46:43<br>t的单位为秒，用unix时间戳计算。一旦帖子发表，t就是固定值，不会随时间改变，而且帖子越新，t值越大<br>2005年12月8日应该是Reddit成立的时间</p>
 <p><strong>2. 赞成票与反对票的差x</strong><br>x = 赞成票 - 反对票</p>
 <p><strong>3. 投票方向y</strong><br>y是一个符号变量，表示对文章的总体看法：<br>如果赞成票居多，y就是+1；<br>如果反对票居多，y就是-1；<br>如果赞成票和反正票相等，y就是0</p>
 <p>$$y = \begin{cases}1\quad(x&gt;0)\0\quad(x=0)\-1;(x&lt;0)\end{cases}$$</p>
 <p><strong>4. 帖子的受肯定（否定）的程度z</strong><br>z表示赞成票与反对表之间差额的绝对值。如果对某个帖子的评价越是一边倒，z就越大；如果赞成票等于反对票，z就等于1</p>
 <p>$$z = \begin{cases}\mid x\mid(x\neq0)\;1\quad (x=0 )\end{cases}$$</p>
 <p>注：根据controversy函数可以看出针对高赞成高反对高争议的帖子会有争议值的计算，例如有1000赞成1000反对的帖子相比较只有2赞0反对的帖子来说排名会靠前</p>
-<h3 id="计算公式"><a href="#计算公式" class="headerlink" title="计算公式"></a>计算公式</h3><p>结合以上几个变量，Reddit的最终得分计算公式如下：</p>
+<h3 id="数据公式"><a href="#数据公式" class="headerlink" title="数据公式"></a>数据公式</h3><p>结合以上几个变量，Reddit的最终得分计算公式如下：</p>
 <p>$$Score = \log_{10}z+\frac {yt} {45000}$$</p>
-<p>$$\sqrt{2} \quad and \quad \sqrt[n]{3}$$</p>
-<p>$ J_\alpha(x) = \sum_{m=0}^\infty \frac{(-1)^m}{m! \Gamma (m + \alpha + 1)} {\left({ \frac{x}{2} }\right)}^{2m + \alpha} \text {，行内公式示例} $</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Score &#x3D; \log_&#123;10&#125;z+\frac &#123;yt&#125; &#123;45000&#125;</span><br></pre></td></tr></table></figure>
+
 <p><strong>公式拆解</strong></p>
 <p><strong>（一）</strong></p>
 <p>$$ \log_{10}z $$</p>
@@ -233,7 +233,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8C%87%E6%A0%87"><span class="toc-text">算法指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8C%87%E6%A0%87"><span class="toc-text">数据指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%85%AC%E5%BC%8F"><span class="toc-text">数据公式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
     </div>
   </div>
 
