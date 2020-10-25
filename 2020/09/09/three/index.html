@@ -126,7 +126,10 @@
           
       </div>
       <div class="markdown-body">
-        <h4 id="列转行：collect-set-collect-list"><a href="#列转行：collect-set-collect-list" class="headerlink" title="列转行：collect_set(),collect_list()"></a>列转行：collect_set(),collect_list()</h4><p>两者常与group by一起使用，将分组中的某列转为一个数组返；<br>不同的是collect_list不去重，collect_set去重<br>示例Table：</p>
+        <h4 id="列转行：collect-set-collect-list"><a href="#列转行：collect-set-collect-list" class="headerlink" title="列转行：collect_set(),collect_list()"></a>列转行：collect_set(),collect_list()</h4><blockquote>
+<p>两者常与group by一起使用，将分组中的某列转为一个数组返；<br>不同的是collect_list不去重，collect_set去重</p>
+</blockquote>
+<p>示例Table：</p>
 <table>
 <thead>
 <tr>
@@ -209,11 +212,83 @@
 </tbody></table>
 </li>
 </ul>
-<h4 id="行转列：explode-array"><a href="#行转列：explode-array" class="headerlink" title="行转列：explode(array)"></a>行转列：explode(array)</h4><p>数组中的每个元素生成一行；<br>select中无法产生其他列<br>示例T1：<br>| colA | colB |<br>| — | — |<br>| 1 | [‘A’,’B’,’A’] |<br>| 2 | [‘C’] |<br>| 3 | [‘A’,’D’] |</p>
-<p>示例T2：<br>| colA | colB |<br>| — | — |<br>| 1 | A,B,A|<br>| 2 | C |<br>| 3 | A,D |</p>
+<h4 id="行转列：explode-array"><a href="#行转列：explode-array" class="headerlink" title="行转列：explode(array)"></a>行转列：explode(array)</h4><blockquote>
+<p>数组中的每个元素生成一行；<br>select中无法产生其他列</p>
+</blockquote>
+<p>示例T1：</p>
+<table>
+<thead>
+<tr>
+<th>colA</th>
+<th>colB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>[‘A’,’B’,’A’]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[‘C’]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>[‘A’,’D’]</td>
+</tr>
+</tbody></table>
+<p>示例T2：</p>
+<table>
+<thead>
+<tr>
+<th>colA</th>
+<th>colB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A,B,A</td>
+</tr>
+<tr>
+<td>2</td>
+<td>C</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A,D</td>
+</tr>
+</tbody></table>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">explode</span>(colB) <span class="keyword">as</span> colB </span><br><span class="line"><span class="keyword">from</span> T1;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">explode</span>(<span class="keyword">split</span>(colB,<span class="string">&#x27;,&#x27;</span>)) <span class="keyword">as</span> colB </span><br><span class="line"><span class="keyword">from</span> T2;</span><br></pre></td></tr></table></figure>
-<p>Result：<br>| colB |<br>| — |<br>| A |<br>| B |<br>| A |<br>| C |<br>| A |<br>| D |</p>
-<h4 id="行转列：lateral-view（常与explode一起使用）"><a href="#行转列：lateral-view（常与explode一起使用）" class="headerlink" title="行转列：lateral view（常与explode一起使用）"></a>行转列：lateral view（常与explode一起使用）</h4><p>示例T1：</p>
+
+<p>Result：</p>
+<table>
+<thead>
+<tr>
+<th>colB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+</tr>
+<tr>
+<td>B</td>
+</tr>
+<tr>
+<td>A</td>
+</tr>
+<tr>
+<td>C</td>
+</tr>
+<tr>
+<td>A</td>
+</tr>
+<tr>
+<td>D</td>
+</tr>
+</tbody></table>
+<h4 id="行转列：lateral-view"><a href="#行转列：lateral-view" class="headerlink" title="行转列：lateral view"></a>行转列：lateral view</h4><blockquote>
+<p>常与explode一起使用</p>
+</blockquote>
+<p>示例T1：</p>
 <table>
 <thead>
 <tr>
@@ -236,8 +311,60 @@
 </tbody></table>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> colA,tmpB </span><br><span class="line"><span class="keyword">from</span> T1 </span><br><span class="line"><span class="keyword">lateral</span> <span class="keyword">view</span> <span class="keyword">explode</span>(colB) tmp <span class="keyword">as</span> tmpB </span><br></pre></td></tr></table></figure>
 
-<p>Result：<br>| colA | tmp B |<br>| — | — |<br>| 1 | A |<br>| 1 | B |<br>| 1 | A |<br>| 2 | C |<br>| 3 | A |<br>| 3 | D |</p>
-<p>示例T2：<br>| colA | colB |<br>| — | — |<br>| [1,4] | A,B,A|<br>| [2,5,6] | C |<br>| [3] | A,D |</p>
+<p>Result：</p>
+<table>
+<thead>
+<tr>
+<th>colA</th>
+<th>tmp B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A</td>
+</tr>
+<tr>
+<td>1</td>
+<td>B</td>
+</tr>
+<tr>
+<td>1</td>
+<td>A</td>
+</tr>
+<tr>
+<td>2</td>
+<td>C</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A</td>
+</tr>
+<tr>
+<td>3</td>
+<td>D</td>
+</tr>
+</tbody></table>
+<p>示例T2：</p>
+<table>
+<thead>
+<tr>
+<th>colA</th>
+<th>colB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[1,4]</td>
+<td>A,B,A</td>
+</tr>
+<tr>
+<td>[2,5,6]</td>
+<td>C</td>
+</tr>
+<tr>
+<td>[3]</td>
+<td>A,D</td>
+</tr>
+</tbody></table>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> tmpA,tmpB</span><br><span class="line"><span class="keyword">from</span> T2 </span><br><span class="line"><span class="keyword">lateral</span> <span class="keyword">view</span> <span class="keyword">explode</span>(colA) tmp1 <span class="keyword">as</span> tmpA </span><br><span class="line"><span class="keyword">lateral</span> <span class="keyword">view</span> <span class="keyword">explode</span>(colB) tmp2 <span class="keyword">as</span> tmpB</span><br></pre></td></tr></table></figure>
 <p>Result：</p>
 <table>
@@ -323,7 +450,31 @@
 </tbody></table>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 统计各操作系统以及总的登录用户数</span></span><br><span class="line"><span class="keyword">select</span></span><br><span class="line">  os_type,</span><br><span class="line">  <span class="keyword">count</span>(<span class="keyword">distinct</span> uid) <span class="keyword">as</span> login_uv</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">  <span class="keyword">Table</span> <span class="keyword">lateral</span> <span class="keyword">view</span> <span class="keyword">explode</span>(</span><br><span class="line">    <span class="keyword">case</span></span><br><span class="line">      <span class="keyword">when</span> os = <span class="string">&#x27;1&#x27;</span> <span class="keyword">then</span> <span class="built_in">array</span>(<span class="string">&#x27;ios&#x27;</span>, <span class="string">&#x27;all&#x27;</span>)</span><br><span class="line">      <span class="keyword">when</span> os = <span class="string">&#x27;2&#x27;</span> <span class="keyword">then</span> <span class="built_in">array</span>(<span class="string">&#x27;android&#x27;</span>, <span class="string">&#x27;all&#x27;</span>)</span><br><span class="line">      <span class="keyword">else</span> <span class="built_in">array</span>(<span class="string">&#x27;other&#x27;</span>, <span class="string">&#x27;all&#x27;</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  ) t <span class="keyword">as</span> os_type</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">  os_type</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">BY</span></span><br><span class="line">  login_uv <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
 
-<p>Result：<br>| os_type | login_uv |<br>| — | — |<br>| all | 492 |<br>| android | 345 |<br>| ios | 123 |<br>| other | 24 |</p>
+<p>Result：</p>
+<table>
+<thead>
+<tr>
+<th>os_type</th>
+<th>login_uv</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all</td>
+<td>492</td>
+</tr>
+<tr>
+<td>android</td>
+<td>345</td>
+</tr>
+<tr>
+<td>ios</td>
+<td>123</td>
+</tr>
+<tr>
+<td>other</td>
+<td>24</td>
+</tr>
+</tbody></table>
 
       </div>
       
@@ -375,7 +526,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E8%BD%AC%E8%A1%8C%EF%BC%9Acollect-set-collect-list"><span class="toc-text">列转行：collect_set(),collect_list()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Aexplode-array"><span class="toc-text">行转列：explode(array)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Alateral-view%EF%BC%88%E5%B8%B8%E4%B8%8Eexplode%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="toc-text">行转列：lateral view（常与explode一起使用）</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E8%BD%AC%E8%A1%8C%EF%BC%9Acollect-set-collect-list"><span class="toc-text">列转行：collect_set(),collect_list()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Aexplode-array"><span class="toc-text">行转列：explode(array)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E8%BD%AC%E5%88%97%EF%BC%9Alateral-view"><span class="toc-text">行转列：lateral view</span></a></li></ol>
     </div>
   </div>
 
