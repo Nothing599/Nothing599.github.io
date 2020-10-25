@@ -126,12 +126,9 @@
           
       </div>
       <div class="markdown-body">
-        <p>正则匹配：RLIKE、REGEXP</p>
-<ul>
-<li>通配符匹配（B为简单通配符表达式）<br>A LIKE B<br>A NOT LIKE B / NOT A LIKE B<br>_ 表示任意单个字符（1个）<br>% 表示任意数量字符（0个或多个）</li>
-<li>正则匹配（B为正则表达式）<br>A RLIKE B<br>REGEXP_EXTRACT(string str,string B,int index)</li>
-</ul>
-<table>
+        <h4 id="一、正则匹配"><a href="#一、正则匹配" class="headerlink" title="一、正则匹配"></a>一、正则匹配</h4><h5 id="RLIKE、REGEXP"><a href="#RLIKE、REGEXP" class="headerlink" title="RLIKE、REGEXP"></a>RLIKE、REGEXP</h5><ul>
+<li><strong>通配符匹配（B为简单通配符表达式）</strong><br>A LIKE B<br>A NOT LIKE B / NOT A LIKE B<br>_ 表示任意单个字符（1个）<br>% 表示任意数量字符（0个或多个）</li>
+<li><strong>正则匹配（B为正则表达式）</strong><br>A RLIKE B<br>REGEXP_EXTRACT(string str,string B,int index)<h5 id="元字符描述"><a href="#元字符描述" class="headerlink" title="元字符描述"></a>元字符描述</h5><table>
 <thead>
 <tr>
 <th>元字符</th>
@@ -251,14 +248,15 @@
 <td>匹配任何非单词字符 等价于[^A-Za-z0-9]</td>
 </tr>
 </tbody></table>
-<p>Example：<br>抽取20200831所发的帖子中，标题和内容均包含关键词（电影、电视剧、综艺、彩蛋、剧评、影评、路透）中的任一个，且在标题中不包含关键词（通知、公告、求粉、刷分、灌水、刷经验、抢楼、盖楼、签到、打卡、签个到、求购、代理、中奖）的帖子</p>
-<blockquote>
-<p>– 帖子id、发帖人id、发帖时间、标题、包含的第一个关键词、包含的关键词个数<br>select<br>  tid,<br>  uid,<br>  created_at,<br>  title,<br>  regexp_extract(title, ‘.*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).*‘, 1) as first_keyword,<br>  size(split(title, ‘电影|电视剧|综艺|彩蛋|剧评|影评|路透’)) -1 as nums<br>from<br>  Table<br>where<br>  created_at &gt;= ‘2020-08-31 00:00:00’<br>  and created_at &lt; ‘2020-09-01 00:00:00’<br>  and title rlike ‘.*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).*‘<br>  and content rlike ‘.*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).*‘<br>  and not title rlike ‘.*(通知|公告|求粉|刷分|灌水|刷经验|抢楼|盖楼|签到|打卡|签个到|求购|代理|中奖).*‘</p>
-</blockquote>
-<ul>
-<li>常用正则表达式应用实例</li>
+</li>
 </ul>
-<table>
+<p><strong>Example：</strong></p>
+<blockquote>
+<p>抽取20200831所发的帖子中，标题和内容均包含关键词（电影、电视剧、综艺、彩蛋、剧评、影评、路透）中的任一个，且在标题中不包含关键词（通知、公告、求粉、刷分、灌水、刷经验、抢楼、盖楼、签到、打卡、签个到、求购、代理、中奖）的帖子</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SQL</span><br><span class="line">-- 帖子id、发帖人id、发帖时间、标题、包含的第一个关键词、包含的关键词个数</span><br><span class="line">select</span><br><span class="line">  tid,</span><br><span class="line">  uid,</span><br><span class="line">  created_at,</span><br><span class="line">  title,</span><br><span class="line">  regexp_extract(title, &#39;.\*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).\*&#39;, 1) as first_keyword,</span><br><span class="line">  size(split(title, &#39;电影|电视剧|综艺|彩蛋|剧评|影评|路透&#39;)) -1 as nums</span><br><span class="line">from</span><br><span class="line">  Table</span><br><span class="line">where</span><br><span class="line">  created_at &gt;&#x3D; &#39;2020-08-31 00:00:00&#39;</span><br><span class="line">  and created_at &lt; &#39;2020-09-01 00:00:00&#39; </span><br><span class="line">  and title rlike &#39;.\*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).\*&#39;</span><br><span class="line">  and content rlike &#39;.\*(电影|电视剧|综艺|彩蛋|剧评|影评|路透).\*&#39; </span><br><span class="line">  and not title rlike &#39;.\*(通知|公告|求粉|刷分|灌水|刷经验|抢楼|盖楼|签到|打卡|签个到|求购|代理|中奖).\*&#39;</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、常用应用实例"><a href="#二、常用应用实例" class="headerlink" title="二、常用应用实例"></a>二、常用应用实例</h4><table>
 <thead>
 <tr>
 <th>描述</th>
@@ -439,6 +437,18 @@
       
     </div>
     
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D"><span class="toc-text">一、正则匹配</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RLIKE%E3%80%81REGEXP"><span class="toc-text">RLIKE、REGEXP</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%83%E5%AD%97%E7%AC%A6%E6%8F%8F%E8%BF%B0"><span class="toc-text">元字符描述</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B8%B8%E7%94%A8%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B"><span class="toc-text">二、常用应用实例</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
 
     
       <div class="comments-container">
