@@ -138,33 +138,32 @@
           
       </div>
       <div class="markdown-body">
-        <h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><blockquote>
+        <h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><blockquote>
 <p>Reddit是美国最大的网上社区，它的每个贴子前面都有向上和向下的箭头，分别表示“赞成”和“反对”。用户点击进行投票，Reddit根据投票结果，计算出最新的“热点文章排行榜”</p>
 </blockquote>
-<h3 id="二、算法"><a href="#二、算法" class="headerlink" title="二、算法"></a>二、算法</h3><h4 id="Python代码"><a href="#Python代码" class="headerlink" title="Python代码"></a>Python代码</h4><p>Reddit的程序是开源的，使用Python语言编写。排序算法的代码大致如下：</p>
+<h2 id="二、算法"><a href="#二、算法" class="headerlink" title="二、算法"></a>二、算法</h2><h3 id="Python代码"><a href="#Python代码" class="headerlink" title="Python代码"></a>Python代码</h3><p>Reddit的程序是开源的，使用Python语言编写。排序算法的代码大致如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime,timedelta</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> log</span><br><span class="line"></span><br><span class="line">epoch = datetime(<span class="number">1970</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">epoch_seconds</span>(<span class="params">date</span>):</span></span><br><span class="line">    td = date - epoch</span><br><span class="line">    <span class="keyword">return</span> td.days * <span class="number">86400</span> + td.seconds + (float(td.microseconds) / <span class="number">1000000</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">score</span>(<span class="params">ups,downs</span>):</span></span><br><span class="line">    <span class="keyword">return</span> ups - downs</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hot</span>(<span class="params">ups,downs,date</span>):</span></span><br><span class="line">    s = score(ups,downs)</span><br><span class="line">    order = log(max(abs(s),<span class="number">1</span>),<span class="number">10</span>)</span><br><span class="line">    sigh = <span class="number">1</span> <span class="keyword">if</span> s &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">-1</span> <span class="keyword">if</span> s &lt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    seconds = epoch_seconds(date) - <span class="number">1134028003</span></span><br><span class="line">    <span class="keyword">return</span> round(order + sigh * seconds / <span class="number">45000</span>, <span class="number">7</span>)</span><br></pre></td></tr></table></figure>
 <p>在网上有看到贴github上除计算hot值外还有计算争议值：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cpdef double controversy(long ups,long downs):</span><br><span class="line">    <span class="keyword">return</span> float(ups + downs) / max(abs(score(ups,downs)),<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
-<h4 id="算法指标"><a href="#算法指标" class="headerlink" title="算法指标"></a>算法指标</h4><p><strong>1. 帖子的新旧程度t</strong><br>t = 发帖时间 - 2005年12月8日7:46:43<br>t的单位为秒，用unix时间戳计算。一旦帖子发表，t就是固定值，不会随时间改变，而且帖子越新，t值越大<br>2005年12月8日应该是Reddit成立的时间</p>
+<h3 id="算法指标"><a href="#算法指标" class="headerlink" title="算法指标"></a>算法指标</h3><p><strong>1. 帖子的新旧程度t</strong><br>t = 发帖时间 - 2005年12月8日7:46:43<br>t的单位为秒，用unix时间戳计算。一旦帖子发表，t就是固定值，不会随时间改变，而且帖子越新，t值越大<br>2005年12月8日应该是Reddit成立的时间</p>
 <p><strong>2. 赞成票与反对票的差x</strong><br>x = 赞成票 - 反对票</p>
 <p><strong>3. 投票方向y</strong><br>y是一个符号变量，表示对文章的总体看法：<br>如果赞成票居多，y就是+1；<br>如果反对票居多，y就是-1；<br>如果赞成票和反正票相等，y就是0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y &#x3D; \begin&#123;cases&#125;1\quad(x&gt;0)\\0\quad(x&#x3D;0)\\-1\;(x&lt;0)\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
-
+<p>$$ y = \begin{cases}1\quad(x&gt;0)\0\quad(x=0)\-1;(x&lt;0)\end{cases} $$</p>
 <p><strong>4. 帖子的受肯定（否定）的程度z</strong><br>z表示赞成票与反对表之间差额的绝对值。如果对某个帖子的评价越是一边倒，z就越大；如果赞成票等于反对票，z就等于1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">z &#x3D; \begin&#123;cases&#125;\mid x\mid(x\neq0)\\\;1\quad (x&#x3D;0 )\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+<p>$$ z = \begin{cases}\mid x\mid(x\neq0)\;1\quad (x=0 )\end{cases} $$</p>
 <p>注：根据controversy函数可以看出针对高赞成高反对高争议的帖子会有争议值的计算，例如有1000赞成1000反对的帖子相比较只有2赞0反对的帖子来说排名会靠前</p>
 <h4 id="计算公式"><a href="#计算公式" class="headerlink" title="计算公式"></a>计算公式</h4><p>结合以上几个变量，Reddit的最终得分计算公式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Score &#x3D; \log_&#123;10&#125;z+\frac &#123;yt&#125; &#123;45000&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="公式拆解"><a href="#公式拆解" class="headerlink" title="公式拆解"></a>公式拆解</h4><p><strong>（一）</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\log_&#123;10&#125;z</span><br></pre></td></tr></table></figure>
+<p>$$ Score = \log_{10}z+\frac {yt} {45000} $$</p>
+<h3 id="公式拆解"><a href="#公式拆解" class="headerlink" title="公式拆解"></a>公式拆解</h3><p><strong>（一）</strong></p>
+<p>$$ \log_{10}z $$</p>
 <p>该部分表示赞成票与反对票的差额z越大，得分越大</p>
 <p>注意点：<br>这里用的是以10为底的对数，意味着z = 10的时候可以得1分，z = 100的时候可以得2分。也就是说前10个投票人与后90个人（甚至再后面900个投票人）的权重是一样的，即如果一个帖子特别受到欢迎，那么越到后面投赞成票，对得分越不会产生影响<br>当赞成票 = 反对票时，z = 1，因此这部分为0即不产生得分<br><strong>（二）</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\frac &#123;yt&#125; &#123;45000&#125;</span><br></pre></td></tr></table></figure>
+<p>$$ \frac {yt} {45000} $$</p>
 <p>该部分表示t越大，得分越高，即新帖子的得分会高于老帖子，它起到自动将老帖子的排名往下拉的作用</p>
 <p>分母的45000秒相当于12.5个小时，也就是说后一天的帖子会比前一天的多得2分，结合前一部分可以得出结论：如果第一天的帖子想在第二天保持原来的排名，在这一天里它的z值必须增加100倍（净赞成票增加100倍）</p>
 <p>y的作用是产生加分或减分：<br>当赞成票超过反对票时，这一部分为正，起到加分作用；<br>当赞成票少于反对票时，这一部分为负，起到减分作用；<br>当两者相等时，这一部分为0<br>这就保证了得到大量净赞成票的文章会排在前列，赞成票与反对票相近或相等的文章会排在后面，得到净反对票的文章会排在最后</p>
-<h3 id="三、结论"><a href="#三、结论" class="headerlink" title="三、结论"></a>三、结论</h3><ul>
+<h2 id="三、结论"><a href="#三、结论" class="headerlink" title="三、结论"></a>三、结论</h2><ul>
 <li>发帖时间是一个很重要的参数，通常新帖子的得分会高于老帖子</li>
 <li>得到支持票和反对票持平的争议帖子和得到票大多数为支持的帖子相比排名将为降低</li>
 </ul>
@@ -236,7 +235,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">目录</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8C%87%E6%A0%87"><span class="toc-text">算法指标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%E6%8B%86%E8%A7%A3"><span class="toc-text">公式拆解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%97%E6%B3%95"><span class="toc-text">二、算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E4%BB%A3%E7%A0%81"><span class="toc-text">Python代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%8C%87%E6%A0%87"><span class="toc-text">算法指标</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%E6%8B%86%E8%A7%A3"><span class="toc-text">公式拆解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-text">三、结论</span></a></li></ol>
     </div>
   </div>
 
