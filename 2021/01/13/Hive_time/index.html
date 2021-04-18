@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>Hive日期转换 | 大胖熊</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/"><img src="/images/avatar.png" alt=""></a>
+    <div class="nickname"><a href="/index.html">大胖熊</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/index.html">
+          <a href="/archives/index.html">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/index.html">
+          <a href="/categories/index.html">分类</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/index.html">
+          <a href="/tags/index.html">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/index.html">
+          <a href="/about/index.html">关于</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Hive日期转换</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间 | updatetime"></i>
+          2021-01-13
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="类别 | categories"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/SQL/index.html" title="查看 SQL 分类">
+                    <b>#</b> SQL
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签 | tags"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/SQL/index.html" title="查看 SQL 标签">
+                    <b>#</b> SQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h5 id="1-current-date-获取当前日期"><a href="#1-current-date-获取当前日期" class="headerlink" title="1. current_date:获取当前日期"></a>1. current_date:获取当前日期</h5><blockquote>
+<p>select current_date()<br>输出：2021-01-13</p>
+</blockquote>
+<h5 id="2-current-timestamp-获取当前时间，精确到秒"><a href="#2-current-timestamp-获取当前时间，精确到秒" class="headerlink" title="2. current_timestamp:获取当前时间，精确到秒"></a>2. current_timestamp:获取当前时间，精确到秒</h5><blockquote>
+<p>select current_timestamp()<br>输出：2021-01-13 14:22:04.018+08:00</p>
+</blockquote>
+<h5 id="3-to-date-日期转换为日期函数"><a href="#3-to-date-日期转换为日期函数" class="headerlink" title="3. to_date:日期转换为日期函数"></a>3. to_date:日期转换为日期函数</h5><blockquote>
+<p>select to_date(‘2021-01-11 13:34:12’)<br>输出：2021-01-11</p>
+</blockquote>
+<h5 id="4-from-unixtime：转化unix时间戳到当前时区的时间格式-时间戳是秒的格式，毫秒的话需要-1000"><a href="#4-from-unixtime：转化unix时间戳到当前时区的时间格式-时间戳是秒的格式，毫秒的话需要-1000" class="headerlink" title="4. from_unixtime：转化unix时间戳到当前时区的时间格式,时间戳是秒的格式，毫秒的话需要/1000"></a>4. from_unixtime：转化unix时间戳到当前时区的时间格式,时间戳是秒的格式，毫秒的话需要/1000</h5><blockquote>
+<p>select from_unixtime(1610294400, ‘yyyyMMdd’)<br>输出：20210111</p>
+</blockquote>
+<blockquote>
+<p>select from_unixtime(1610298072000 / 1000, ‘yyyy-MM-dd’)<br>输出：2020-01-11</p>
+</blockquote>
+<h5 id="5-unix-timestamp：获取当前unix时间戳"><a href="#5-unix-timestamp：获取当前unix时间戳" class="headerlink" title="5. unix_timestamp：获取当前unix时间戳"></a>5. unix_timestamp：获取当前unix时间戳</h5><blockquote>
+<p>select unix_timestamp()<br>输出：1610444126</p>
+</blockquote>
+<blockquote>
+<p>select unix_timestamp(‘2021-01-10 13:51:20’)<br>输出：1610257880</p>
+</blockquote>
+<blockquote>
+<p>select unix_timestamp(‘2021-01-10’, ‘yyyy-mm-dd’)<br>输出：1610208060</p>
+</blockquote>
+<h5 id="6-获取当前年-月-日-小时-分钟-秒"><a href="#6-获取当前年-月-日-小时-分钟-秒" class="headerlink" title="6. 获取当前年/月/日/小时/分钟/秒"></a>6. 获取当前年/月/日/小时/分钟/秒</h5><blockquote>
+<p>select year(‘2021-01-10’)<br>select month(‘2021-01-10’)<br>select day(‘2021-01-10’)<br>select hour(‘2021-01-10 12:14:56’)<br>select minute(‘2021-01-10 12:14:56’)<br>select second(‘2021-01-10 12:14:56’)</p>
+</blockquote>
+<h5 id="7-日期加减"><a href="#7-日期加减" class="headerlink" title="7. 日期加减"></a>7. 日期加减</h5><p><strong>datediff：返回开始日期减去结束日期的天数，格式只能是yyyy-mm-dd</strong></p>
+<blockquote>
+<p>select datediff(‘2021-01-10’, ‘2020-12-31’)<br>输出：10</p>
+</blockquote>
+<p><strong>date_sub：返回日期前n天的日期，格式只能是yyyy-mm-dd</strong></p>
+<blockquote>
+<p>select date_sub(‘2021-01-10’,5)<br>输出：2021-01-05</p>
+</blockquote>
+<p><strong>date_add：返回日期后n天的日期，格式只能是yyyy-mm-dd</strong><br>select date_add(‘2021-01-10’,1)<br>输出：2021-01-11</p>
+<h5 id="8-yyyymmdd和yyyy-mm-dd互相转换"><a href="#8-yyyymmdd和yyyy-mm-dd互相转换" class="headerlink" title="8. yyyymmdd和yyyy-mm-dd互相转换"></a>8. yyyymmdd和yyyy-mm-dd互相转换</h5><blockquote>
+<p>select from_unixtime(unix_timestamp(‘2021-01-11’, ‘yyyy-mm-dd’),’yyyymmdd’)<br>select from_unixtime(unix_timestamp(‘20210111’,’yyyymmdd’),’yyyy-mm-dd’)</p>
+</blockquote>
+<h5 id="9-时间差"><a href="#9-时间差" class="headerlink" title="9. 时间差"></a>9. 时间差</h5><p><strong>两个日期相差多少小时</strong></p>
+<blockquote>
+<p>select (unix_timestamp(‘2021-01-11 12:03:55’) - unix_timestamp(‘2021-01-11 11:03:55’)) / 3600<br>输出：1 </p>
+</blockquote>
+<p><strong>两个日期相差多少分钟</strong></p>
+<blockquote>
+<p>select (unix_timestamp(‘2021-01-11 12:03:55’) - unix_timestamp(‘2021-01-11 11:03:55’)) / 60<br>输出：60</p>
+</blockquote>
+<h5 id="10-返回上个月第一天和最后一天"><a href="#10-返回上个月第一天和最后一天" class="headerlink" title="10. 返回上个月第一天和最后一天"></a>10. 返回上个月第一天和最后一天</h5><p><strong>这个月第一天</strong></p>
+<blockquote>
+<p>select trunc(CURRENT_TIMESTAMP,’mm’)</p>
+</blockquote>
+<p><strong>上个月第一天</strong></p>
+<blockquote>
+<p>select &gt;trunc(add_months(CURRENT_TIMESTAMP,-1),’mm’)<br>select trunc(current_date, ‘mm’)</p>
+</blockquote>
+<p><strong>上个月最后一天</strong></p>
+<blockquote>
+<p>select date_sub(trunc(CURRENT_TIMESTAMP,’mm’),1);</p>
+</blockquote>
+<h5 id="11-字符串转换为日期"><a href="#11-字符串转换为日期" class="headerlink" title="11. 字符串转换为日期"></a>11. 字符串转换为日期</h5><blockquote>
+<p>select to_date(from_unixtime(unix_timestamp(‘11.11.2021’, ‘mm.dd.yyyy’)))</p>
+</blockquote>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2020/10/25/Reddit/index.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间 | updatetime"></i>
+              2021-01-13
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="类别 | categories"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/SQL/index.html" title="查看 SQL 分类">
+                        <b>#</b> SQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签 | tags"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/SQL/index.html" title="查看 SQL 标签">
+                        <b>#</b> SQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-current-date-%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F"><span class="toc-text">1. current_date:获取当前日期</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-current-timestamp-%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4%EF%BC%8C%E7%B2%BE%E7%A1%AE%E5%88%B0%E7%A7%92"><span class="toc-text">2. current_timestamp:获取当前时间，精确到秒</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-to-date-%E6%97%A5%E6%9C%9F%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="toc-text">3. to_date:日期转换为日期函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-from-unixtime%EF%BC%9A%E8%BD%AC%E5%8C%96unix%E6%97%B6%E9%97%B4%E6%88%B3%E5%88%B0%E5%BD%93%E5%89%8D%E6%97%B6%E5%8C%BA%E7%9A%84%E6%97%B6%E9%97%B4%E6%A0%BC%E5%BC%8F-%E6%97%B6%E9%97%B4%E6%88%B3%E6%98%AF%E7%A7%92%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E6%AF%AB%E7%A7%92%E7%9A%84%E8%AF%9D%E9%9C%80%E8%A6%81-1000"><span class="toc-text">4. from_unixtime：转化unix时间戳到当前时区的时间格式,时间戳是秒的格式，毫秒的话需要&#x2F;1000</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-unix-timestamp%EF%BC%9A%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8Dunix%E6%97%B6%E9%97%B4%E6%88%B3"><span class="toc-text">5. unix_timestamp：获取当前unix时间戳</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%B9%B4-%E6%9C%88-%E6%97%A5-%E5%B0%8F%E6%97%B6-%E5%88%86%E9%92%9F-%E7%A7%92"><span class="toc-text">6. 获取当前年&#x2F;月&#x2F;日&#x2F;小时&#x2F;分钟&#x2F;秒</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-%E6%97%A5%E6%9C%9F%E5%8A%A0%E5%87%8F"><span class="toc-text">7. 日期加减</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-yyyymmdd%E5%92%8Cyyyy-mm-dd%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2"><span class="toc-text">8. yyyymmdd和yyyy-mm-dd互相转换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#9-%E6%97%B6%E9%97%B4%E5%B7%AE"><span class="toc-text">9. 时间差</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-%E8%BF%94%E5%9B%9E%E4%B8%8A%E4%B8%AA%E6%9C%88%E7%AC%AC%E4%B8%80%E5%A4%A9%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9"><span class="toc-text">10. 返回上个月第一天和最后一天</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#11-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%97%A5%E6%9C%9F"><span class="toc-text">11. 字符串转换为日期</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/Nothing599index.html">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="18018981910@163.comindex.html">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/Nothing599index.html">Copyright © 大胖熊 2020</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+    </div>
+  </body>
+</html>
